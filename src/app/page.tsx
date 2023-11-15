@@ -1,48 +1,34 @@
-import prisma from "@/lib/db";
-import { create, deleteTodo, editTodo } from "@/lib/serverActions";
+import { deleteTodo, editTodo, getTodos } from "@/lib/serverActions";
+import SaveButton from "./_components/SaveButton";
+import DeleteButton from "./_components/DeleteButton";
+import AddForm from "./_components/AddForm";
 
-async function getTodos() {
-  const todos = await prisma.todo.findMany({
-    select: {
-      id: true,
-      // createdAt: true,
-      input: true
-    },
-    orderBy: {
-      createdAt: 'desc'
-    }
-  });
+const BetterExample = async () => {
+  const todos = await getTodos();
 
-  return todos;
-}
-
-export default async function Home() {
-
-  
-
-
-  const todos = await getTodos()
   return (
     <main className="h-screen w-screen flex items-center justify-center">
-      <div className='border rounded-lg shadow-xl p-10 w-[30vw]'>
-        <form className="flex flex-col" action={create} >
-          <input type="text" name='input' className='border p-1 border-gray-800 rounded' />
-          <button type="submit" className='bg-green-500 rounded-lg mt-2 text-white py-2'>Submit</button>
-        </form>
+      <div className='border border-slate-800 rounded-lg shadow-xl shadow-slate-950 p-10 w-[30vw]'>
+        <AddForm />
 
         <ul className="mt-5 flex flex-col gap-y-2">
           {todos.map((todo) => (
-            <li key={todo.id}>
-              <form action={editTodo} className="flex">
+            <li key={todo.id} className="flex gap-2">
+              <form className="flex gap-2" action={editTodo}>
                 <input type="hidden" name="inputId" value={todo.id} />
-                <input type="text" name="input" defaultValue={todo.input} className="border p-1" />
-                <button type="submit" className="border bg-green-400">Save</button>
-                <button formAction={deleteTodo} type="submit" className="border bg-red-400">Delete</button>
+                <input type="text" name="input" defaultValue={todo.input} className="border border-slate-800 p-1 rounded" />
+                <SaveButton />
+              </form>
+              <form action={deleteTodo}>
+                <input type="hidden" name="inputId" value={todo.id} />
+                <DeleteButton />
               </form>
             </li>
           ))}
         </ul>
       </div>
     </main>
-  )
+  );
 }
+
+export default BetterExample;
