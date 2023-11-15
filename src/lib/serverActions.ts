@@ -18,7 +18,19 @@ export async function getTodos() {
 }
 
 
-export async function createTodo(previosState: any, formData: FormData) {
+export async function create( formData: FormData) {
+    const input = formData.get('input') as string;
+
+    await prisma.todo.create({
+        data: {
+            input
+        }
+    })
+    revalidatePath('/')
+}
+
+
+export async function createTodo(previosState: any, formData: FormData): Promise<"Failed to create a todo." | undefined> {
     try {
         const input = formData.get('input') as string;
 
@@ -27,14 +39,13 @@ export async function createTodo(previosState: any, formData: FormData) {
                 input
             }
         })
-        revalidatePath('/')
+        revalidatePath('/better')
     } catch (error) {
         return 'Failed to create a todo.'
     }
 }
 
 export async function editTodo(formData: FormData) {
-    "use server";
     const input = formData.get('input') as string;
     const inputID = formData.get('inputId') as string;
 
@@ -46,7 +57,7 @@ export async function editTodo(formData: FormData) {
             id: inputID,
         }
     })
-    revalidatePath('/')
+    revalidatePath('/better')
 }
 
 export async function deleteTodo(formData: FormData) {
@@ -57,5 +68,5 @@ export async function deleteTodo(formData: FormData) {
             id: inputID,
         }
     })
-    revalidatePath('/')
+    revalidatePath('/better')
 }

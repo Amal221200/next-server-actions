@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import { createTodo, deleteTodo, editTodo } from "@/lib/serverActions";
+import { create, deleteTodo, editTodo } from "@/lib/serverActions";
 
 async function getTodos() {
   const todos = await prisma.todo.findMany({
@@ -25,7 +25,7 @@ export default async function Home() {
   return (
     <main className="h-screen w-screen flex items-center justify-center">
       <div className='border rounded-lg shadow-xl p-10 w-[30vw]'>
-        <form className="flex flex-col" action={createTodo} >
+        <form className="flex flex-col" action={create} >
           <input type="text" name='input' className='border p-1 border-gray-800 rounded' />
           <button type="submit" className='bg-green-500 rounded-lg mt-2 text-white py-2'>Submit</button>
         </form>
